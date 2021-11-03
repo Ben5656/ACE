@@ -47,7 +47,7 @@ def Father (x y : People) : Prop
 
 -- insert your definitions here
 def Sibling(x y : People) : Prop := -- Defined to make brother, uncle and siblinginlaw more concise
-  ∃ z: People, Parent z x ↔ Parent z y
+  x ≠ y ∧ ∃ z: People, Parent z x ↔ Parent z y
 
 def Brother(x y : People) : Prop :=
   Sibling x y ∧ Male x
@@ -150,29 +150,61 @@ begin
   exact f,
 end
 
-theorem ex06 : ∀ x y z : A, x ≠ y → (x ≠ z ∨ y ≠ z) :=
+theorem ex06 : ∀ x y z : A, x ≠ y → (x ≠ z ∨ y ≠ z) := -- provable classically
+begin 
+  assume a b c ab,
+  apply raa,
+  assume not,
+  apply not,
+  constructor,
+  assume ac,
+  apply not,
+  right,
+  assume bc,
+  apply ab,
+  rewrite bc,
+  exact ac,
+end
+
+theorem ex07 : ¬ ¬ (∀ x : A, PP x) → ∀ x : A, ¬ ¬ PP x := -- provable intuitionistically
+begin 
+  assume a b c,
+  apply a,
+  assume d,
+  apply c,
+  apply d,
+end
+
+theorem ex08 : (∀ x : A, ¬ ¬ PP x) → ¬ ¬ ∀ x : A, PP x := -- provable classically
+begin 
+  assume a b,
+  apply b,
+  assume c,
+  apply raa,
+  apply a,
+end
+
+theorem ex09 : (∃ x : A, true) → (∃ x:A, PP x) → ∀ x : A,PP x := -- not provable classically
 begin 
   sorry,
 end
 
-theorem ex07 : ¬ ¬ (∀ x : A, PP x) → ∀ x : A, ¬ ¬ PP x :=
-begin 
-  sorry,
-end
-
-theorem ex08 : (∀ x : A, ¬ ¬ PP x) → ¬ ¬ ∀ x : A, PP x :=
-begin 
-  sorry,
-end
-
-theorem ex09 : (∃ x : A, true) → (∃ x:A, PP x) → ∀ x : A,PP x :=
-begin 
-  sorry,
-end
-
-theorem ex10 : (∃ x : A, true) → (∃ x:A, PP x → ∀ x : A,PP x) :=
-begin 
-  sorry,
+theorem ex10 : (∃ x : A, true) → (∃ x:A, PP x → ∀ x : A,PP x) := -- provable classically
+begin
+  assume a,
+  cases a with e t,
+  apply raa,
+  assume g,
+  apply g,
+  existsi e,
+  assume ppe,
+  assume a,
+  apply raa,
+  assume x,
+  apply g,
+  existsi a,
+  assume y,
+  contradiction,
 end
 
 end poker
