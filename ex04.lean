@@ -110,16 +110,12 @@ begin
   contradiction,
 end
 
-theorem ch03 : ∃ x:bool,∀ y:bool, x ≠ y :=
+theorem ch03 : ¬ (∃ x:bool,∀ y:bool, x ≠ y) :=
 begin
-  have x : bool,
-  constructor,
-  existsi x,
-  assume y,
-  cases x,
-  assume b,
-
-  sorry,
+  assume a,
+  cases a with x y,
+  apply y,
+  reflexivity,
 end
 
 theorem ch04 : ∀ x y : bool, x=y ∨ x ≠ y :=
@@ -140,17 +136,81 @@ begin
   reflexivity,
 end
 
-theorem ch05 : ∃ x:bool, x=bnot x :=
+theorem ch05 : ¬ (∃ x:bool, x=bnot x) :=
 begin
-  existsi ff,
-  dsimp[bnot],
-  cases ff,
-  cases tt,
-  refl,
-  
-
+  assume f,
+  cases f with x y,
+  cases x,
+  contradiction,
+  contradiction,
 end
 
+theorem ch06 : ∀ x y z : bool, x=y ∨ x=z ∨ y=z :=
+begin
+  assume a b c,
+  cases a,
+  cases b,
+  left,
+  reflexivity,
+  cases c,
+  right,
+  left,
+  reflexivity,
+  right,
+  right,
+  reflexivity,
+  cases b,
+  cases c,
+  right,
+  right,
+  reflexivity,
+  right,
+  left,
+  reflexivity,
+  left,
+  reflexivity,
+end
+
+theorem ch07 : ∀ y:bool, ∃ x:bool, y = bnot x :=
+begin
+  assume a,
+  cases a,
+  existsi tt,
+  dsimp[bnot],
+  reflexivity,
+
+  existsi ff,
+  dsimp[bnot],
+  reflexivity,
+end
+
+theorem ch08 : ∀ x y : bool, bnot x = bnot y → x=y :=
+begin
+  assume a b c,
+  cases a,
+  cases b,
+  reflexivity,
+  contradiction,
+  cases b,
+  contradiction,
+  reflexivity,
+end
+
+theorem ch09 : ∃ b : bool, ∀ y:bool, b && y = y :=
+begin
+  existsi tt,
+  dsimp[band],
+  assume t,
+  reflexivity,
+end
+
+theorem ch10 : ∃ b : bool, ∀ y:bool, b && y = b :=
+begin
+  existsi ff,
+  dsimp[band],
+  assume t,
+  reflexivity,
+end
 
 /- 
 PART II (40%)
@@ -168,6 +228,17 @@ theorem implb_ok : ∀ x y : bool , implb x y = tt ↔ (x = tt) → (y = tt)
 -/
 
 -- insert answer here
+def implb : bool → bool → bool 
+| tt b := b
+| ff b := ff
+
+theorem implb_ok : ∀ x y : bool , implb x y = tt ↔ (x = tt) → (y = tt) :=
+begin
+  assume a b,
+  constructor,
+  assume c d,
+  
+end
 
 /-
 PART III (20%)
@@ -184,7 +255,33 @@ equations "e:b = tt" and "e:b = ff" to the cases.
 
 theorem weird : ∀ f : bool → bool, ∀ x:bool, f (f (f x)) = f x :=
 begin
-  sorry,
+  assume f x,
+  cases b : x,
+
+  -- 
+
+  cases a : f ff,
+  rewrite a,
+  exact a,
+  cases b : f tt,
+  exact a,
+
+  exact b,
+
+  --
+
+  cases a : f ff,
+  cases b : f tt,
+  rewrite a,
+  exact a,
+  rewrite b,
+  exact b,
+  cases b : f tt,
+  rewrite a,
+  exact b,
+
+  rewrite b,
+  exact b,
 end
 
 end ex04
