@@ -229,15 +229,37 @@ theorem implb_ok : ∀ x y : bool , implb x y = tt ↔ (x = tt) → (y = tt)
 
 -- insert answer here
 def implb : bool → bool → bool 
-| tt b := b
-| ff b := ff
+| tt tt := tt
+| tt ff := ff
+| ff tt := tt
+| ff ff := tt
 
 theorem implb_ok : ∀ x y : bool , implb x y = tt ↔ (x = tt) → (y = tt) :=
 begin
   assume a b,
   constructor,
   assume c d,
-  
+  cases b,
+  cases a,
+  exact d,
+  cases c,
+  reflexivity,
+
+  assume x,
+  cases a,
+  cases b,
+  dsimp[implb],
+  reflexivity,
+  dsimp[implb],
+  reflexivity,
+
+  cases b,
+  dsimp[implb],
+  apply x,
+  reflexivity,
+
+  dsimp[implb],
+  reflexivity,
 end
 
 /-
