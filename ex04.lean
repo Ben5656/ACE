@@ -287,7 +287,6 @@ begin
   exact a,
   cases b : f tt,
   exact a,
-
   exact b,
 
   --

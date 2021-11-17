@@ -170,12 +170,10 @@ begin
   dsimp[mul],
   rewrite ih,
   rewrite add_assoc,
+  rewrite add_assoc,
+  
   apply congr_arg succ,
-  rewrite add_comm,
-  
-  
-
-  
+  rewrite add_comm y' x,
 end
 
 
@@ -221,7 +219,12 @@ end
 
 theorem anti_sym : ∀ x y : ℕ , x ≤ y → y ≤ x → x = y :=
 begin
+  assume a b c d,
+  induction c with c' c2,
+  induction d with d' d2,
+  have H : a = (c' + d') + a,
   
+
   
 end
 
