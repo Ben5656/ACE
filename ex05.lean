@@ -216,16 +216,98 @@ begin
     ... = l + (k + x) : by rewrite add_assoc,
 end
 
+lemma new_add : ∀ x y : ℕ, x + succ y = succ (x + y):=
+begin
+  assume x y,
+  dsimp [add],
+  reflexivity,
+end
+
+lemma right_cancel : ∀ x y z : ℕ, x + z = y + z → x = y :=
+begin
+  assume a b c d,
+  induction c with c' ih,
+  apply d,
+  apply ih,
+  rewrite new_add at d,
+  rewrite new_add at d,
+  injection d,
+end
+
+lemma left_cancel : ∀ x y z : ℕ, z + x = z + y → x = y :=
+begin
+  assume a b c d,
+  rewrite add_comm c a at d,
+  rewrite add_comm c b at d,
+  apply right_cancel,
+  apply d,
+end
+
+lemma right_zero : ∀ x y : ℕ, x + y = x → y = 0 :=
+begin
+  assume x y z,
+  apply left_cancel y,
+  rewrite z,
+  apply add_rneutr,
+end
+
+lemma lem1 : ∀ x y : ℕ, x + y = y → x = 0 :=
+begin
+  assume x y z,
+  induction x with x' ih,
+  reflexivity,
+  rewrite add_comm at z,
+  apply right_zero,
+  apply z,
+end
+
+lemma not_equal_zero : ∀ x : ℕ, succ x ≠ zero :=
+begin
+  assume x,
+  contradiction,
+end
+
+lemma right_equals_zero : ∀ x y : ℕ, x + y = 0 → y = 0 :=
+begin
+  assume x y z,
+  induction y with y' ih,
+  reflexivity,
+  rewrite new_add at z,
+  have f :false,
+  apply not_equal_zero(x+y'),
+  exact z,
+  cases f,
+end
+
+lemma lem2 : ∀ x y : ℕ, x + y = 0 → x = 0 :=
+begin
+  assume x y z,
+  induction x with x' ih,
+  reflexivity,
+  rewrite add_comm at z,
+  apply right_equals_zero,
+  apply z,
+end
 
 theorem anti_sym : ∀ x y : ℕ , x ≤ y → y ≤ x → x = y :=
 begin
-  assume a b c d,
-  induction c with c' c2,
-  induction d with d' d2,
-  have H : a = (c' + d') + a,
-  
+  assume a b ab ba,
+  cases ab with c' c2,
+  cases ba with d' d2,
+  rewrite← d2,
+  rewrite← c2,
+  rewrite← c2 at d2,
+  have h : d' + c' = 0,
+  apply lem1,
+  rewrite add_assoc,
+  exact d2,
 
-  
+  have g : d' = 0,
+  apply lem2,
+  exact h,
+
+  rewrite g,
+  rewrite add_lneutr,
 end
 
 end ex05
